@@ -217,4 +217,13 @@ class WindowLineBallView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+
+        fun create(activity : Activity) : WindowLineBallView {
+            val view : WindowLineBallView = WindowLineBallView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
