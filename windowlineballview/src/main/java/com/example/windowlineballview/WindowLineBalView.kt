@@ -192,4 +192,27 @@ class WindowLineBallView(ctx : Context) : View(ctx) {
             curr.startUpdating(cb)
         }
     }
+
+    data class Renderer(var view : WindowLineBallView) {
+
+        private val animator : Animator = Animator(view)
+        private val wlb : WindowLineBall = WindowLineBall(0)
+        private val paint : Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+
+        fun render(canvas : Canvas) {
+            canvas.drawColor(backColor)
+            wlb.draw(canvas, paint)
+            animator.animate {
+                wlb.update {
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            wlb.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
