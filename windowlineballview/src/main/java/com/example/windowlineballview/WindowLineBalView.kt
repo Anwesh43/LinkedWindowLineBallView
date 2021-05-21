@@ -18,19 +18,19 @@ val colors : Array<Int> = arrayOf(
 ).map {
     Color.parseColor(it)
 }.toTypedArray()
-val parts : Int = 4
+val parts : Int = 5
 val scGap : Float = 0.02f / parts
 val strokeFactor : Float = 90f
 val sizeFactor : Float = 3.9f
 val delay : Long = 20
 val backColor : Int = Color.parseColor("#BDBDBD")
-val rFactor : Float = 12.9f
-val deg : Float = 45f
+val rFactor : Float = 18.9f
+
 
 fun Int.inverse() : Float = 1f / this
 fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse())
 fun Float.divideScale(i : Int, n : Int) : Float = Math.min(n.inverse(), maxScale(i, n)) * n
-fun Float.sinify() : Float = 1f / this
+fun Float.sinify() : Float = Math.sin(this * Math.PI).toFloat()
 
 fun Canvas.drawWindowLineBall(scale : Float, w : Float, h : Float, paint : Paint) {
     val sf : Float = scale.sinify()
@@ -38,18 +38,21 @@ fun Canvas.drawWindowLineBall(scale : Float, w : Float, h : Float, paint : Paint
     val sf2 : Float = sf.divideScale(1, parts)
     val sf3 : Float = sf.divideScale(2, parts)
     val sf4 : Float = sf.divideScale(3, parts)
+    val sf5 : Float = sf.divideScale(4, parts)
     val size : Float = Math.min(w, h) / sizeFactor
     val r : Float = Math.min(w, h) / rFactor
     save()
     translate(w / 2, h / 2)
     for (j in 0..1) {
         save()
-        drawRect(RectF(-size / 2, -size / 2, size * 0.5f * (1 - sf1), size / 2), paint)
-        drawLine(0f, -size * 0.5f * sf2, 0f, size * 0.5f * sf2, paint)
+        scale(1f - 2 * j, 1f)
+        drawRect(RectF(-size / 2, size / 2 - size * sf1, -size / 2 + size * 0.5f * (1 - sf2), size / 2), paint)
+        drawLine(-size / 2, size / 2 - size * sf1, -size / 2, size / 2, paint)
+        drawLine(0f, -size * 0.5f * sf3, 0f, size * 0.5f * sf3, paint)
         for (i in 0..1) {
             save()
-            translate((-size / 2) * sf4, (-size / 2) * sf4)
-            drawCircle(0f, 0f, r * sf3, paint)
+            translate((-size / 2) * sf5, (-size / 2) * sf5 * (1 - 2 * i))
+            drawCircle(0f, 0f, r * sf4, paint)
             restore()
         }
         restore()
